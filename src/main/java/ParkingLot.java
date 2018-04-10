@@ -2,16 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingLot {
-    private int totallots;
+    private int totalLots;
     private int availableLot;
     List<String> carParked;
 
     ParkingLot(int totallots){
-        this.totallots = totallots;
+        this.totalLots = totallots;
         this.availableLot = totallots;
         carParked = new ArrayList<String>();
     }
-
 
     public boolean park(String plateNumber) {
         if (availableLot > 0 && !carParked.contains(plateNumber)) {
@@ -25,6 +24,7 @@ public class ParkingLot {
     public boolean pickup(String plateNumber) {
         if (carParked.contains(plateNumber)) {
             carParked.remove(plateNumber);
+            availableLot++;
             return true;
         }
 

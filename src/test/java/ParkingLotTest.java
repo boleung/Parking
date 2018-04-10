@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 public class ParkingLotTest {
 
     @Test
-    public void parking_success(){
+    public void should_park_1_car_in_1_lot(){
         ParkingLot parkinglot=new ParkingLot(1);
         assertTrue(parkinglot.park("1111"));
     }
@@ -22,6 +22,13 @@ public class ParkingLotTest {
         ParkingLot parkinglot=new ParkingLot(2);
         parkinglot.park("1111");
         assertTrue(parkinglot.park("2222"));
+    }
+
+    @Test
+    public void should_fail_to_par_the_same_car() {
+        ParkingLot parkinglot=new ParkingLot(2);
+        parkinglot.park("1111");
+        assertFalse(parkinglot.park("1111"));
     }
 
     @Test

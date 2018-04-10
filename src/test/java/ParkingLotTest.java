@@ -5,13 +5,13 @@ import static org.junit.Assert.*;
 public class ParkingLotTest {
 
     @Test
-    public void should_park_1_car_in_1_lot(){
+    public void should_park_1_car_in_1_empty_lot(){
         ParkingLot parkinglot=new ParkingLot(1);
         assertTrue(parkinglot.park("1111"));
     }
 
     @Test
-    public void should_fail_to_park_2_cars_in_1_Lot() {
+    public void should_fail_to_park_car_when_no_empty_Lot() {
         ParkingLot parkinglot=new ParkingLot(1);
         parkinglot.park("1111");
         assertFalse(parkinglot.park("2222"));
@@ -25,14 +25,14 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void should_fail_to_par_the_same_car() {
+    public void should_fail_to_park_the_same_car() {
         ParkingLot parkinglot=new ParkingLot(2);
         parkinglot.park("1111");
         assertFalse(parkinglot.park("1111"));
     }
 
     @Test
-    public void should_success_to_pick_up_1_car() {
+    public void should_success_to_pick_up_1_parked_car() {
         ParkingLot parkinglot=new ParkingLot(2);
         parkinglot.park("1111");
         assertTrue(parkinglot.pickup("1111"));
@@ -69,5 +69,13 @@ public class ParkingLotTest {
         ParkingLot parkinglot=new ParkingLot(2);
         parkinglot.park("1111");
         assertEquals(1,parkinglot.getAvailableLot());
+    }
+
+    @Test
+    public void should_get_2_available_lot_after_pick_up_1_car_from_a_parkinglot_with_2_lot_1_parked() {
+        ParkingLot parkinglot=new ParkingLot(2);
+        parkinglot.park("1111");
+        parkinglot.pickup("1111");
+        assertEquals(2,parkinglot.getAvailableLot());
     }
 }

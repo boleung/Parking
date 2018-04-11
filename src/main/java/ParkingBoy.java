@@ -4,7 +4,7 @@ import ParkingException.ParkingLotFullException;
 import java.util.List;
 
 public class ParkingBoy {
-    private List<ParkingLot> parkingLotList;
+    protected List<ParkingLot> parkingLotList;
 
     public ParkingBoy() {
     }

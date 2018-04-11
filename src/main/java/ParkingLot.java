@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ParkingLot {
     private int totalLots;
-    Map<ParkingToken, Car> cars;
+    private Map<ParkingToken, Car> cars;
 
     ParkingLot(int totallots){
         this.totalLots = totallots;
@@ -17,7 +17,7 @@ public class ParkingLot {
         if (isParkingLotFull()) {
             throw new ParkingLotFullException();
         }
-        if (cars.containsValue(car)) {
+        if (isCarParked(car)) {
             throw new CarAlreadyParkedException();
             }
 
@@ -26,12 +26,16 @@ public class ParkingLot {
         return token;
     }
 
+    public boolean isCarParked(Car car) {
+        return cars.containsValue(car);
+    }
+
     private boolean isParkingLotFull() {
         return totalLots == cars.size();
     }
 
     public Car pickup(ParkingToken token) {
-        if (!cars.containsKey(token)) {
+        if (! isTokenValid(token)) {
             throw new CarNotParkedException();
         }
         return cars.remove(token);
@@ -39,5 +43,9 @@ public class ParkingLot {
 
     public int getAvailableLot() {
         return totalLots - cars.size();
+    }
+
+    public boolean isTokenValid(ParkingToken token){
+        return cars.containsKey(token);
     }
 }

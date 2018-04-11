@@ -1,37 +1,43 @@
-import java.util.ArrayList;
-import java.util.List;
+
+import ParkingException.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ParkingLot {
     private int totalLots;
-    private int availableLot;
-    List<String> carParked;
+    Map<ParkingToken, Car> cars;
 
     ParkingLot(int totallots){
         this.totalLots = totallots;
-        this.availableLot = totallots;
-        carParked = new ArrayList<String>();
+        cars = new HashMap<ParkingToken,Car>();
     }
 
-    public boolean park(String plateNumber) {
-        if (availableLot > 0 && !carParked.contains(plateNumber)) {
-           availableLot--;
-           carParked.add(plateNumber);
-           return true;
-            }
-        return false;
-    }
-
-    public boolean pickup(String plateNumber) {
-        if (carParked.contains(plateNumber)) {
-            carParked.remove(plateNumber);
-            availableLot++;
-            return true;
+    public ParkingToken park(Car car)  {
+        if (isParkingLotFull()) {
+            throw new ParkingLotFullException();
         }
+        if (cars.containsValue(car)) {
+            throw new CarAlreadyParkedException();
+            }
 
-        return false;
+        ParkingToken token = new ParkingToken(car);
+        cars.put(token,car);
+        return token;
+    }
+
+    private boolean isParkingLotFull() {
+        return totalLots == cars.size();
+    }
+
+    public Car pickup(ParkingToken token) {
+        if (!cars.containsKey(token)) {
+            throw new CarNotParkedException();
+        }
+        return cars.remove(token);
     }
 
     public int getAvailableLot() {
-        return this.availableLot;
+        return totalLots - cars.size();
     }
 }

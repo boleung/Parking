@@ -3,34 +3,14 @@ import ParkingException.ParkingLotFullException;
 
 import java.util.List;
 
-public class ParkingBoy {
-    protected List<ParkingLot> parkingLotList;
+public class ParkingBoy extends AbstractParkingBoy{
 
-    public ParkingBoy() {
+    public ParkingBoy(List<ParkingLot> parkingLotList) {
+        super(parkingLotList);
     }
 
-    public void addManagedParkingLot(List<ParkingLot> parkingLotList) {
-        this.parkingLotList=parkingLotList;
-    }
-
-    public ParkingToken park(Car car) {
-        if (isCarParked(car)){
-            throw new CarAlreadyParkedException();
-        }
-        return parkingLotList.get(getAvailalbeParkingLot()).park(car);
-    }
-
-    private boolean isCarParked(Car car) {
-        for (int i=0;i<parkingLotList.size()-1;i++){
-            if (parkingLotList.get(i).isCarParked(car)){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private int getAvailalbeParkingLot() {
+    @Override
+    protected int FindParkingLot() {
         int i;
         for (i=0;i<parkingLotList.size()-1;i++) {
             if (parkingLotList.get(i).getAvailableLot()>0) {
@@ -44,21 +24,5 @@ public class ParkingBoy {
         return i;
     }
 
-    public int getAvailableLotAmt(int parkingLotIndex) {
-        return parkingLotList.get(parkingLotIndex).getAvailableLot();
-    }
 
-    public Car pickup(ParkingToken token) {
-        return parkingLotList.get(getParkingLotIndex(token)).pickup(token);
-    }
-
-    private int getParkingLotIndex(ParkingToken token) {
-        int i;
-        for (i=0;i<parkingLotList.size()-1;i++){
-            if (parkingLotList.get(i).isTokenValid(token)){
-                break;
-            }
-        }
-        return i;
-    }
 }

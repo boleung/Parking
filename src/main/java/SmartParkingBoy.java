@@ -1,19 +1,16 @@
-public class SmartParkingBoy extends ParkingBoy{
+import java.util.List;
 
-    public SmartParkingBoy() {
+public class SmartParkingBoy extends AbstractParkingBoy{
+    public SmartParkingBoy(List<ParkingLot> parkingLotList) {
+        super(parkingLotList);
     }
 
     @Override
-    public ParkingToken park(Car car) {
-        int maxParkinglotIndex = getMaxParkingLotIndex();
-        return parkingLotList.get(maxParkinglotIndex).park(car);
-    }
-
-    private int getMaxParkingLotIndex() {
+    protected int FindParkingLot() {
         int maxAvailableParkingLotIndex=0, maxAvailableLotCount=0, currentLotAvailableCount;
 
         for (int i=0;i<parkingLotList.size();i++){
-            currentLotAvailableCount=getAvailableLotAmt(i);
+            currentLotAvailableCount= parkingLotList.get(i).getAvailableLot();
 
             if (maxAvailableLotCount<currentLotAvailableCount){
                 maxAvailableLotCount=currentLotAvailableCount;

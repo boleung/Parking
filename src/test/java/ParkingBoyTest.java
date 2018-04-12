@@ -5,22 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ParkingBoyTest {
+public class ParkingBoyTest extends AbstractParkingBoyTest {
     private ParkingBoy parkingBoy;
-
+    private ParkingLot lot1,lot2;
     @Before
     public void initialization(){
-        parkingBoy=new ParkingBoy();
-
-        List<ParkingLot> parkingLotList=new ArrayList<ParkingLot>();
-        parkingLotList.add(new ParkingLot(2));
-        parkingLotList.add(new ParkingLot(2));
-
-        parkingBoy.addManagedParkingLot(parkingLotList);
+        parkingLotList=new ArrayList<ParkingLot>();
+        lot1 = addParkingLot(2);
+        lot2= addParkingLot(2);
+        parkingBoy = new ParkingBoy(parkingLotList);
     }
 
     @Test
@@ -28,52 +24,41 @@ public class ParkingBoyTest {
         Car car=new Car("1111");
 
         assertNotNull(parkingBoy.park(car));
-        assertEquals(1,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(2,parkingBoy.getAvailableLotAmt(1));
+        assertEquals(1,lot1.getAvailableLot());
+        assertEquals(2,lot2.getAvailableLot());
     }
 
     @Test
     public void should_park_2_cars_in_first_Parking_lot_when_2_empty_parking_lots() {
+
         Car car1=new Car("1111");
         Car car2=new Car("2222");
 
         assertNotNull(parkingBoy.park(car1));
         assertNotNull(parkingBoy.park(car2));
-        assertEquals(0,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(2,parkingBoy.getAvailableLotAmt(1));
+        assertEquals(0,lot1.getAvailableLot());
+        assertEquals(2,lot2.getAvailableLot());
     }
 
     @Test
     public void should_park_1_car_in_second_Parking_lot_when_first_lot_is_full() {
-        Car car1=new Car("1111");
-        Car car2=new Car("2222");
-        Car car3=new Car("3333");
 
-        assertNotNull(parkingBoy.park(car1));
-        assertNotNull(parkingBoy.park(car2));
-        assertNotNull(parkingBoy.park(car3));
+        lot1.park(new Car("1111"));
+        lot1.park(new Car("2222"));
 
-        assertEquals(0,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(1,parkingBoy.getAvailableLotAmt(1));
+        assertNotNull(parkingBoy.park(new Car("3333")));
+        assertEquals(0,lot1.getAvailableLot());
+        assertEquals(1,lot2.getAvailableLot());
     }
 
     @Test (expected = ParkingLotFullException.class)
     public void should_fail_to_park_car_when_all_lots_are_full() {
-        Car car1=new Car("1111");
-        Car car2=new Car("2222");
-        Car car3=new Car("3333");
-        Car car4=new Car("4444");
-        Car car5=new Car("5555");
+        lot1.park(new Car("1111"));
+        lot1.park(new Car("2222"));
+        lot2.park(new Car("3333"));
+        lot2.park(new Car("4444"));
 
-        assertNotNull(parkingBoy.park(car1));
-        assertNotNull(parkingBoy.park(car2));
-        assertNotNull(parkingBoy.park(car3));
-        assertNotNull(parkingBoy.park(car4));
-
-        assertEquals(0,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(0,parkingBoy.getAvailableLotAmt(1));
-
-        ParkingToken token=parkingBoy.park(car5);
+        ParkingToken token=parkingBoy.park(new Car("5555"));
     }
 
     @Test (expected = CarAlreadyParkedException.class)
@@ -93,67 +78,49 @@ public class ParkingBoyTest {
         ParkingToken token1=parkingBoy.park(car1);
 
         assertNotNull(parkingBoy.pickup(token1));
-        assertEquals(2,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(2,parkingBoy.getAvailableLotAmt(1));
+        assertEquals(2, parkingBoy.parkingLotList.get(0).getAvailableLot());
+        assertEquals(2, parkingBoy.parkingLotList.get(1).getAvailableLot());
     }
 
     @Test
     public void should_pick_up_1_car_after_parking_in_lot_2() {
-        Car car1=new Car("1111");
-        ParkingToken token1=parkingBoy.park(car1);
-        Car car2=new Car("2222");
-        ParkingToken token2=parkingBoy.park(car2);
-        Car car3=new Car("3333");
-        ParkingToken token3=parkingBoy.park(car3);
+        ParkingToken token1=parkingBoy.park(new Car("1111"));
+        ParkingToken token2=parkingBoy.park(new Car("2222"));
+        ParkingToken token3=parkingBoy.park(new Car("3333"));
 
         assertNotNull(parkingBoy.pickup(token3));
-        assertEquals(0,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(2,parkingBoy.getAvailableLotAmt(1));
+        assertEquals(0, parkingBoy.parkingLotList.get(0).getAvailableLot());
+        assertEquals(2, parkingBoy.parkingLotList.get(1).getAvailableLot());
     }
 
     @Test
     public void should_pick_up_1_car_from_lot_1_after_parking_cars_in_lot_2() {
-        Car car1=new Car("1111");
-        ParkingToken token1=parkingBoy.park(car1);
-        Car car2=new Car("2222");
-        ParkingToken token2=parkingBoy.park(car2);
-        Car car3=new Car("3333");
-        ParkingToken token3=parkingBoy.park(car3);
+        ParkingToken token1=parkingBoy.park(new Car("1111"));
+        ParkingToken token2=parkingBoy.park(new Car("2222"));
+        ParkingToken token3=parkingBoy.park(new Car("3333"));
 
         assertNotNull(parkingBoy.pickup(token2));
-        assertEquals(1,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(1,parkingBoy.getAvailableLotAmt(1));
+        assertEquals(1, parkingBoy.parkingLotList.get(0).getAvailableLot());
+        assertEquals(1, parkingBoy.parkingLotList.get(1).getAvailableLot());
     }
 
     @Test
     public void should_park_in_lot_1_after_pick_up_1_car_from_lot_1_with_parking_cars_in_lot_2() {
-        Car car1=new Car("1111");
-        ParkingToken token1=parkingBoy.park(car1);
-        Car car2=new Car("2222");
-        ParkingToken token2=parkingBoy.park(car2);
-        Car car3=new Car("3333");
-        ParkingToken token3=parkingBoy.park(car3);
-        Car car4=new Car("4444");
+        ParkingToken token1=parkingBoy.park(new Car("1111"));
+        ParkingToken token2=parkingBoy.park(new Car("2222"));
+        ParkingToken token3=parkingBoy.park(new Car("3333"));
 
         Car car=parkingBoy.pickup(token2);
-        assertNotNull(parkingBoy.park(car4));
-        assertEquals(0,parkingBoy.getAvailableLotAmt(0));
-        assertEquals(1,parkingBoy.getAvailableLotAmt(1));
+        assertNotNull(parkingBoy.park(new Car("4444")));
+        assertEquals(0, parkingBoy.parkingLotList.get(0).getAvailableLot());
+        assertEquals(1, parkingBoy.parkingLotList.get(1).getAvailableLot());
     }
 
     @Test (expected = CarNotParkedException.class)
     public void should_fail_to_pick_up_not_parked_car() {
-        Car car1=new Car("1111");
-        ParkingToken token1=parkingBoy.park(car1);
-        Car car2=new Car("2222");
-        ParkingToken token2=parkingBoy.park(car2);
-        Car car3=new Car("3333");
-        ParkingToken token3=parkingBoy.park(car3);
-        Car car4=new Car("4444");
-        ParkingToken token4=parkingBoy.park(car4);
-        Car car5=new Car("5555");
+        ParkingToken token1=parkingBoy.park(new Car("1111"));
+        ParkingToken token2 = new ParkingToken(new Car("2222"));
 
-        parkingBoy.pickup(new ParkingToken(car5));
-
+        parkingBoy.pickup(token2);
     }
 }

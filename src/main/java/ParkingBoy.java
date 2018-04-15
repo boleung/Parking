@@ -18,10 +18,7 @@ public class ParkingBoy extends AbstractParkingBoy{
             }
         }
 
-        if(i==parkingLotList.size()){
-            throw new ParkingLotFullException();
-        }
-        return i;
+         return i;
     }
 
 

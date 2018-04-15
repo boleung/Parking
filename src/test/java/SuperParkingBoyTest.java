@@ -1,77 +1,84 @@
 import ParkingException.CarNotParkedException;
 import ParkingException.ParkingLotFullException;
 import org.junit.Test;
-import java.util.ArrayList;
-import static org.junit.Assert.*;
 
-public class SmartParkingBoyTest extends AbstractParkingBoyTest {
-    private SmartParkingBoy smartParkingBoy;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class SuperParkingBoyTest extends AbstractParkingBoyTest {
+    private SuperParkingBoy superParkingBoy;
 
     @Test
-    public void should_park_in_lot_2_when_lot_2_has_more_available_lots() {
+    public void should_park_in_lot_1_when_same_available_rate() {
         parkingLotList=new ArrayList<ParkingLot>();
         ParkingLot lot1=addParkingLot(2);
         ParkingLot lot2=addParkingLot(3);
-        smartParkingBoy=new SmartParkingBoy(parkingLotList);
+        superParkingBoy =new SuperParkingBoy(parkingLotList);
 
         Car car1=new Car("1111");
 
-         assertNotNull(smartParkingBoy.park(car1));
-         assertEquals(2,lot1.getAvailableLot());
-         assertEquals(2,lot2.getAvailableLot());
+         assertNotNull(superParkingBoy.park(car1));
+         assertEquals(1,lot1.getAvailableLot());
+         assertEquals(3,lot2.getAvailableLot());
     }
 
     @Test
-    public void should_park_in_lot_3_when_lot_3_has_more_available_lots() {
+    public void should_park_in_lot_2_when_lot_2_has_higher_available_rate() {
         parkingLotList=new ArrayList<ParkingLot>();
         ParkingLot lot1 = addParkingLot(2);
         ParkingLot lot2 = addParkingLot(3);
-        ParkingLot lot3 = addParkingLot(4);
-        smartParkingBoy=new SmartParkingBoy(parkingLotList);
+        superParkingBoy =new SuperParkingBoy(parkingLotList);
 
         Car car1=new Car("1111");
+        lot1.park(car1);
 
-        assertNotNull(smartParkingBoy.park(car1));
-        assertEquals(2,lot1.getAvailableLot());
-        assertEquals(3,lot2.getAvailableLot());
-        assertEquals(3,lot3.getAvailableLot());
+        Car car2=new Car("2222");
+
+        assertNotNull(superParkingBoy.park(car2));
+        assertEquals(1,lot1.getAvailableLot());
+        assertEquals(2,lot2.getAvailableLot());
     }
 
+
     @Test
-    public void should_park_in_lot_1_when_all_parkinglots_have_same_available_lots() {
+    public void should_park_in_lot_1_when_lot_1_has_higher_available_rate() {
         parkingLotList=new ArrayList<ParkingLot>();
         ParkingLot lot1=addParkingLot(2);
         ParkingLot lot2=addParkingLot(3);
-        smartParkingBoy=new SmartParkingBoy(parkingLotList);
+        superParkingBoy =new SuperParkingBoy(parkingLotList);
 
         Car car1=new Car("1111");
         lot2.park(car1);
 
         Car car2=new Car("2222");
 
-        assertNotNull(smartParkingBoy.park(car2));
+        assertNotNull(superParkingBoy.park(car2));
         assertEquals(1,lot1.getAvailableLot());
         assertEquals(2,lot2.getAvailableLot());
     }
 
     @Test
-    public void should_park_in_lot_1_when_lot_1_has_more_available_lots() {
+    public void should_park_in_lot_3_when_lot_3_has_higher_available_rate() {
         parkingLotList=new ArrayList<ParkingLot>();
         ParkingLot lot1=addParkingLot(2);
         ParkingLot lot2=addParkingLot(3);
-        smartParkingBoy=new SmartParkingBoy(parkingLotList);
+        ParkingLot lot3=addParkingLot(1);
+        superParkingBoy =new SuperParkingBoy(parkingLotList);
 
         Car car1=new Car("1111");
-        lot2.park(car1);
+        lot1.park(car1);
 
         Car car2=new Car("2222");
         lot2.park(car2);
 
         Car car3=new Car("3333");
 
-        assertNotNull(smartParkingBoy.park(car3));
+        assertNotNull(superParkingBoy.park(car3));
         assertEquals(1,lot1.getAvailableLot());
-        assertEquals(1,lot2.getAvailableLot());
+        assertEquals(2,lot2.getAvailableLot());
+        assertEquals(0,lot3.getAvailableLot());
     }
 
     @Test
@@ -79,28 +86,27 @@ public class SmartParkingBoyTest extends AbstractParkingBoyTest {
         parkingLotList=new ArrayList<ParkingLot>();
         ParkingLot lot1=addParkingLot(2);
         ParkingLot lot2=addParkingLot(3);
-        smartParkingBoy=new SmartParkingBoy(parkingLotList);
+        superParkingBoy =new SuperParkingBoy(parkingLotList);
 
         Car car1=new Car("1111");
+        ParkingToken token=superParkingBoy.park(car1);
 
-        ParkingToken token=smartParkingBoy.park(car1);
-
-        assertNotNull(smartParkingBoy.pickup(token));
+        assertNotNull(superParkingBoy.pickup(token));
         assertEquals(2,lot1.getAvailableLot());
         assertEquals(3,lot2.getAvailableLot());
     }
 
-
     @Test (expected = CarNotParkedException.class)
-    public void should_fal_to_pick_up_a_car_not_parked(){
+    public void should_fail_to_pick_up_a_car_not_parked(){
         parkingLotList=new ArrayList<ParkingLot>();
         ParkingLot lot1=addParkingLot(2);
         ParkingLot lot2=addParkingLot(3);
-        smartParkingBoy=new SmartParkingBoy(parkingLotList);
+        superParkingBoy =new SuperParkingBoy(parkingLotList);
 
-        ParkingToken token=new ParkingToken(new Car("1111"));
+        Car car1=new Car("1111");
+        ParkingToken token=new ParkingToken(car1);
 
-        smartParkingBoy.pickup(token);
+        superParkingBoy.pickup(token);
     }
 
 
@@ -108,15 +114,19 @@ public class SmartParkingBoyTest extends AbstractParkingBoyTest {
     public void should_fail_to_park_when_all_parking_lots_are_full() {
         parkingLotList=new ArrayList<ParkingLot>();
         ParkingLot lot1=addParkingLot(1);
-        ParkingLot lot2=addParkingLot(1);
-        smartParkingBoy=new SmartParkingBoy(parkingLotList);
+        ParkingLot lot2=addParkingLot(2);
+        superParkingBoy =new SuperParkingBoy(parkingLotList);
 
         Car car1=new Car("1111");
         Car car2=new Car("2222");
         Car car3=new Car("3333");
 
-        smartParkingBoy.park(car1);
-        smartParkingBoy.park(car2);
-        smartParkingBoy.park(car3);
+        superParkingBoy.park(car1);
+        superParkingBoy.park(car2);
+        superParkingBoy.park(car3);
+
+        Car car4=new Car("4444");
+        superParkingBoy.park(car4);
     }
+
 }

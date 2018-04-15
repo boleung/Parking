@@ -20,7 +20,7 @@ public class ParkingBoyTest extends AbstractParkingBoyTest {
     }
 
     @Test
-    public void should_park_1_car_in_first_parking_lot_when_2_empty_parking_lots() {
+    public void should_park_in_lot_1_when_2_empty_parking_lots() {
         Car car=new Car("1111");
 
         assertNotNull(parkingBoy.park(car));
@@ -29,7 +29,7 @@ public class ParkingBoyTest extends AbstractParkingBoyTest {
     }
 
     @Test
-    public void should_park_2_cars_in_first_Parking_lot_when_2_empty_parking_lots() {
+    public void should_park_in_lot_1_when_lot_1_has_empty_parking_lots() {
 
         Car car1=new Car("1111");
         Car car2=new Car("2222");
@@ -41,7 +41,7 @@ public class ParkingBoyTest extends AbstractParkingBoyTest {
     }
 
     @Test
-    public void should_park_1_car_in_second_Parking_lot_when_first_lot_is_full() {
+    public void should_park_in_lot_2_when_lot_1_is_full() {
 
         lot1.park(new Car("1111"));
         lot1.park(new Car("2222"));

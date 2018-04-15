@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ParkingLot {
-    private int totalLots;
+    private int size;
     private Map<ParkingToken, Car> cars;
 
     ParkingLot(int totallots){
-        this.totalLots = totallots;
+        this.size = totallots;
         cars = new HashMap<ParkingToken,Car>();
     }
 
@@ -31,7 +31,7 @@ public class ParkingLot {
     }
 
     private boolean isParkingLotFull() {
-        return totalLots == cars.size();
+        return size == cars.size();
     }
 
     public Car pickup(ParkingToken token) {
@@ -42,10 +42,18 @@ public class ParkingLot {
     }
 
     public int getAvailableLot() {
-        return totalLots - cars.size();
+        return size - cars.size();
     }
 
     public boolean isTokenValid(ParkingToken token){
         return cars.containsKey(token);
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

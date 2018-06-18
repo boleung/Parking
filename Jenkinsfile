@@ -2,7 +2,7 @@
 Jenkinsfile (Declarative Pipeline)
 
 pipeline {
-    agent { docker { image 'maven:3.5.3' } }
+    agent any
     stages {
         stage('build') {
             steps {
